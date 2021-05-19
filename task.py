@@ -1,3 +1,5 @@
+import math
+
 def my_func():
     return "Hello World"
 
@@ -66,4 +68,50 @@ def conv_num(num_str):
             return 0 - num
         else:
             return num
+        
+def my_datetime(num_sec):
+    days_in_months = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
+                      7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+    days = math.floor(num_sec / 60 / 60 / 24)
+    mm = 1
+    dd = 1
+    yyyy = 1970
+    leap_year = 0
+    while days >= 1:
+        if yyyy % 4 == 0:
+            if yyyy % 100 == 0:
+                if yyyy % 400 == 0:
+                    leap_year = 1
+                else:
+                    leap_year = 0
+            else:
+                leap_year = 1
+        else:
+            leap_year = 0
             
+        if leap_year:
+            if days >= 366:
+                yyyy += 1
+                days -= 366
+            else:
+                days_in_month = days_in_months[mm]
+                if mm == 2:
+                    days_in_month += 1
+                if days > days_in_month:
+                    days -= days_in_month
+                    mm += 1
+                else:
+                    dd += days
+                    days -= days
+        else:
+            if days >= 365:
+                yyyy += 1
+                days -= 365
+            else:
+                if days >= days_in_months[mm]:
+                    days -= days_in_months[mm]
+                    mm += 1
+                else:
+                    dd += days
+                    days -= days
+    return f"{mm:02}-{dd:02}-{yyyy}"
