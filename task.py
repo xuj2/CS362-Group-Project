@@ -1,30 +1,31 @@
 import math
 
+
 def conv_num(num_str):
-    digits = {'0':0, '1':1, '2':2, '3':3,'4':4,
-              '5':5, '6':6, '7':7,'8':8, '9':9}
-    hex_values = {'0':0, '1':1, '2':2, '3':3, '4':4,
-                  '5':5, '6':6, '7':7, '8':8, '9':9,
-                  'a':10, 'A':10,'b':11, 'B':11, 'c':12, 'C':12,
-                  'd':13, 'D':13, 'e':14, 'E':14, 'f':15, 'F':15}
-    
+    digits = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+    hex_values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
+                  '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+                  'a': 10, 'A': 10, 'b': 11, 'B': 11, 'c': 12, 'C': 12,
+                  'd': 13, 'D': 13, 'e': 14, 'E': 14, 'f': 15, 'F': 15}
+
     num = 0
     decimal_points_count = 0
     neg_flag = 0
     hex_flag = 0
-    
+
     if num_str[0] == '-':
         neg_flag = 1
-        
+
     if '0x' in num_str or '0X' in num_str:
         hex_flag = 1
-        
+
     for i in num_str:
         if i == '.':
             decimal_points_count += 1
 
     if decimal_points_count == 1:
-        #string float
+        # string float
         dec_count = 0
         dec_flag = 0
         for char in num_str:
@@ -40,7 +41,7 @@ def conv_num(num_str):
         else:
             return num / (10 ** dec_count)
     elif hex_flag:
-        #string hex
+        # string hex
         for i in range(len(num_str)):
             reverse_index = len(num_str) - i - 1
             char = num_str[reverse_index]
@@ -53,7 +54,7 @@ def conv_num(num_str):
                 return None
             num += (hex_values[char] * (16 ** i))
     else:
-        #string integer
+        # string integer
         for char in num_str:
             if char in digits:
                 num *= 10
@@ -65,10 +66,11 @@ def conv_num(num_str):
             return 0 - num
         else:
             return num
-            
+
+
 def my_datetime(num_sec):
-    days_in_months = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
-                      7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+    days_in_months = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+                      7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
     days = math.floor(num_sec / 60 / 60 / 24)
     mm = 1
     dd = 1
@@ -85,7 +87,7 @@ def my_datetime(num_sec):
                 leap_year = 1
         else:
             leap_year = 0
-            
+
         if leap_year:
             if days >= 366:
                 yyyy += 1
@@ -113,10 +115,11 @@ def my_datetime(num_sec):
                     days -= days
     return f"{mm:02}-{dd:02}-{yyyy}"
 
+
 def conv_endian(num, endian='big'):
-    hex_values = {0:'0', 1:'1', 2:'2', 3:'3', 4:'4',
-                  5:'5', 6:'6', 7:'7', 8:'8', 9:'9',
-                  10:'A', 11:'B', 12:'C', 13:'D', 14:'E', 15:'F'}
+    hex_values = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4',
+                  5: '5', 6: '6', 7: '7', 8: '8', 9: '9',
+                  10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
     neg_flag = 0
     hex_count = 0
     hex_list = []
@@ -126,13 +129,13 @@ def conv_endian(num, endian='big'):
         num = 0 - num
     while num >= (16 ** hex_count):
         hex_count += 1
-    #calculate hex values
+    # calculate hex values
     for i in range(hex_count + 1):
         exponent = hex_count - i
         quotient = num // (16 ** exponent)
         hex_list.append(hex_values[quotient])
         num -= (quotient * (16 ** exponent))
-    #format hex values into a string
+    # format hex values into a string
     if endian == 'big':
         for j in range(len(hex_list)):
             hex_num += hex_list[j]
