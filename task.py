@@ -14,6 +14,9 @@ def conv_num(num_str):
     neg_flag = 0
     hex_flag = 0
 
+    if type(num_str) != str or num_str == '':
+        return None
+
     if num_str[0] == '-':
         neg_flag = 1
 
