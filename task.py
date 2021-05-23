@@ -142,6 +142,9 @@ def conv_endian(num, endian='big'):
         quotient = num // (16 ** exponent)
         hex_list.append(hex_values[quotient])
         num -= (quotient * (16 ** exponent))
+    # If odd length and not single digit, pop extra 0 off front
+    if len(hex_list) % 2 != 0 and len(hex_list) > 1 and hex_list[0] == '0':
+        hex_list = hex_list[1:]
     # format hex values into a string
     if endian == 'big':
         for j in range(len(hex_list)):
