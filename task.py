@@ -47,11 +47,11 @@ def conv_num(num_str):
             char = num_str[reverse_index]
             if char == 'x' or char == 'X':
                 if neg_flag:
-                    if i < len(num_str) - 3:
+                    if i < len(num_str) - 3 or num_str[1] != '0':
                         return None
                     return 0 - num
                 else:
-                    if i < len(num_str) - 2:
+                    if i < len(num_str) - 2 or num_str[0] != '0':
                         return None
                     return num
             if char not in hex_values:
