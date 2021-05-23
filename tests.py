@@ -2,6 +2,7 @@ import unittest
 from task import conv_num, my_datetime, conv_endian
 import random
 import time
+import string
 
 
 class TestCase(unittest.TestCase):
@@ -47,6 +48,13 @@ def generate_tests_conv_num(generate=5000):
         num = random.randint(-1000000000000, 10000000000000)
         hex_num = hex(num)
         new_test = build_test_func(num, str(hex_num), conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+    
+    for _ in range(generate):
+        # Tests if conv_num rejects random strings of numbers and letters
+        # Maybe this should be changed? Possibility of getting an actual hex number exists
+        input = ''.join(random.choices(string.ascii_letters + string.digits, k = random.randint(5, 15)))
+        new_test = build_test_func(None, input, conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
 
     
