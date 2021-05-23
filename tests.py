@@ -18,6 +18,14 @@ class TestCase(unittest.TestCase):
     def test_datetime3(self):
         self.assertEqual('02-29-1972', my_datetime(68212800))
 
+class RandomTestCase(unittest.TestCase):
+    pass
+
+def build_test_func(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertEqual(expected, result, message.format(test_case, expected, result))
+    return test
 
 if __name__ == '__main__':
     unittest.main()
