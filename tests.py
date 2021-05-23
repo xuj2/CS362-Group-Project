@@ -30,7 +30,7 @@ def build_test_func(expected, test_case, func_under_test, message):
         self.assertEqual(expected, result, message.format(test_case, expected, result))
     return test
 
-def generate_tests_conv_num(generate=15):
+def generate_tests_conv_num(generate=10000):
     # Generates test cases for conv_num
     message = 'Test case: {}, Expected: {}, Result: {}'
     for _ in range(generate):
@@ -70,4 +70,4 @@ def generate_tests_conv_num(generate=15):
 
 if __name__ == '__main__':
     generate_tests_conv_num()
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=1)
