@@ -34,9 +34,15 @@ def generate_test_conv_num(generate=10000):
         num = random.randint(-10000000000000, 10000000000000)
         new_test = build_test_func(num, str(num), conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+    
+    for _ in range(generate):
+        num = random.uniform(-10000, 10000)
+        new_test = build_test_func(num, str(num), conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+    
 
 
 
 if __name__ == '__main__':
     generate_test_conv_num()
-    unittest.main(verbosity=0)
+    unittest.main(verbosity=2)
