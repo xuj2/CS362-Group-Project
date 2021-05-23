@@ -19,8 +19,10 @@ class TestCase(unittest.TestCase):
     def test_datetime3(self):
         self.assertEqual('02-29-1972', my_datetime(68212800))
 
+
 class RandomTestCase(unittest.TestCase):
     pass
+
 
 def build_test_func(expected, test_case, func_under_test, message):
     def test(self):
@@ -28,8 +30,8 @@ def build_test_func(expected, test_case, func_under_test, message):
         self.assertEqual(expected, result, message.format(test_case, expected, result))
     return test
 
-def generate_tests_conv_num(generate=5000):
-    # Generates test cases for first function
+def generate_tests_conv_num(generate=15):
+    # Generates test cases for conv_num
     message = 'Test case: {}, Expected: {}, Result: {}'
     for _ in range(generate):
         # Test conv_num for correct output of valid number strings
@@ -51,16 +53,21 @@ def generate_tests_conv_num(generate=5000):
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
     
     for _ in range(generate):
-        # Tests if conv_num rejects random strings of numbers and letters
+        # Tests if conv_num returns none for random strings of numbers and letters
         # Maybe this should be changed? Possibility of getting an actual hex number exists
-        input = ''.join(random.choices(string.ascii_letters + string.digits, k = random.randint(5, 15)))
+        input = ''.join(random.choices(string.ascii_letters + string.digits, k = random.randint(10, 15)))
         new_test = build_test_func(None, input, conv_num, message)
-        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+        setattr(RandomTestCase, 'test_{}'.format(input), new_test)
 
-    
-
+    for _ in range(generate):
+        # Tests if conv_num returns none for a number containing 2 decimals
+        num = random.randint(-10000000, 10000000)
+        input, index = str(num), random.randint(1, len(str(num))-1)
+        input = input[:index] + '..' + input[index:]
+        new_test = build_test_func(None, input, conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(input), new_test)
 
 
 if __name__ == '__main__':
     generate_tests_conv_num()
-    unittest.main(verbosity=1)
+    unittest.main(verbosity=2)
