@@ -1,6 +1,9 @@
 import unittest
 from task import conv_num, my_datetime, conv_endian
 import random
+
+import time
+import string
 import datetime
 
 
@@ -61,5 +64,55 @@ class TestCase(unittest.TestCase):
         self.assertIsNone(conv_endian(10, 'SMALL'))
 
 
+class RandomTestCase(unittest.TestCase):
+    pass
+
+
+def build_test_func(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertEqual(expected, result, message.format(test_case, expected, result))
+    return test
+
+
+def generate_tests_conv_num(generate=10000):
+    # Generates test cases for conv_num
+    message = 'Test case: {}, Expected: {}, Result: {}'
+    for _ in range(generate):
+        # Test conv_num for correct output of valid number strings
+        num = random.randint(-10000000000000, 10000000000000)
+        new_test = build_test_func(num, str(num), conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+    
+    for _ in range(generate):
+        # Test conv_num for correct output of valid floats
+        num = random.uniform(-10000, 10000)
+        new_test = build_test_func(num, str(num), conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+
+    for _ in range(generate):
+        # Tests conv_num for correct output of valid hex
+        num = random.randint(-1000000000000, 10000000000000)
+        hex_num = hex(num)
+        new_test = build_test_func(num, str(hex_num), conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
+    
+    for _ in range(generate):
+        # Tests if conv_num returns none for random strings of numbers and letters
+        # Maybe this should be changed? Possibility of getting an actual hex number exists
+        test_input = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(10, 15)))
+        new_test = build_test_func(None, test_input, conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(test_input), new_test)
+
+    for _ in range(generate):
+        # Tests if conv_num returns none for a number containing 2 decimals
+        num = random.randint(-10000000, 10000000)
+        test_input, index = str(num), random.randint(1, len(str(num))-1)
+        test_input = test_input[:index] + '..' + test_input[index:]
+        new_test = build_test_func(None, test_input, conv_num, message)
+        setattr(RandomTestCase, 'test_{}'.format(test_input), new_test)
+
+
 if __name__ == '__main__':
-    unittest.main()
+    generate_tests_conv_num()
+    unittest.main(verbosity=1)
