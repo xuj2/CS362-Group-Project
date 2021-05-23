@@ -31,16 +31,19 @@ def generate_tests_conv_num(generate=5000):
     # Generates test cases for first function
     message = 'Test case: {}, Expected: {}, Result: {}'
     for _ in range(generate):
+        # Test conv_num for correct output of valid number strings
         num = random.randint(-10000000000000, 10000000000000)
         new_test = build_test_func(num, str(num), conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
     
     for _ in range(generate):
+        # Test conv_num for correct output of valid floats
         num = random.uniform(-10000, 10000)
         new_test = build_test_func(num, str(num), conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
 
     for _ in range(generate):
+        # Tests conv_num for correct output of valid hex
         num = random.randint(-1000000000000, 10000000000000)
         hex_num = hex(num)
         new_test = build_test_func(num, str(hex_num), conv_num, message)
