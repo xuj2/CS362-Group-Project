@@ -103,7 +103,7 @@ def my_datetime(num_sec):
                 days_in_month = days_in_months[mm]
                 if mm == 2:
                     days_in_month += 1
-                if days > days_in_month:
+                if days >= days_in_month:
                     days -= days_in_month
                     mm += 1
                 else:
