@@ -8,11 +8,9 @@ def conv_num(num_str):
                   '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
                   'a': 10, 'A': 10, 'b': 11, 'B': 11, 'c': 12, 'C': 12,
                   'd': 13, 'D': 13, 'e': 14, 'E': 14, 'f': 15, 'F': 15}
-
     decimal_points_count = 0
     neg_flag = 0
     hex_flag = 0
-
     if type(num_str) != str or num_str == '':
         return None
 
@@ -144,7 +142,6 @@ def conv_endian(num, endian='big'):
     neg_flag = 0
     hex_count = 0
     hex_list = []
-    hex_num = ''
     if num < 0:
         neg_flag = 1
         num = 0 - num
