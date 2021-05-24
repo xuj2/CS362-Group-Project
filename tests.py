@@ -1,8 +1,6 @@
 import unittest
 from task import conv_num, my_datetime, conv_endian
 import random
-
-import time
 import string
 import datetime
 
@@ -58,8 +56,33 @@ class TestCase(unittest.TestCase):
             hex_result = '-' + hex_result
             self.assertEqual(hex_result, conv_endian(decimal), decimal)
 
-    # Test conv_endian for incorrect/mistyped endian inputs
+    # Test conv_endian for random positive values, little endian format
     def test_conv_endian4(self):
+        for i in range(100000):
+            decimal = random.randint(1, 99999)
+            hex_num = hex(decimal)
+            hex_num = hex_num[2:].upper()
+            if len(hex_num) % 2 != 0:
+                hex_num = '0' + hex_num
+            hex_result = ' '.join(reversed([hex_num[i:i + 2]
+                                  for i in range(0, len(hex_num), 2)]))
+            self.assertEqual(hex_result, conv_endian(decimal, 'little'), decimal)
+
+    # Test conv_endian for random negative values, little endian format
+    def test_conv_endian5(self):
+        for i in range(100000):
+            decimal = random.randint(-99999, -1)
+            hex_num = hex(decimal)
+            hex_num = hex_num[3:].upper()
+            if len(hex_num) % 2 != 0:
+                hex_num = '0' + hex_num
+            hex_result = ' '.join(reversed([hex_num[i:i + 2]
+                                  for i in range(0, len(hex_num), 2)]))
+            hex_result = '-' + hex_result
+            self.assertEqual(hex_result, conv_endian(decimal, 'little'), decimal)
+
+    # Test conv_endian for incorrect/mistyped endian inputs
+    def test_conv_endian6(self):
         self.assertIsNone(conv_endian(10, 'BIG'))
         self.assertIsNone(conv_endian(10, 'Big'))
         self.assertIsNone(conv_endian(10, 'LITTLE'))
