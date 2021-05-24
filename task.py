@@ -9,7 +9,6 @@ def conv_num(num_str):
                   'a': 10, 'A': 10, 'b': 11, 'B': 11, 'c': 12, 'C': 12,
                   'd': 13, 'D': 13, 'e': 14, 'E': 14, 'f': 15, 'F': 15}
 
-    num = 0
     decimal_points_count = 0
     neg_flag = 0
     hex_flag = 0
@@ -28,51 +27,63 @@ def conv_num(num_str):
             decimal_points_count += 1
 
     if decimal_points_count == 1:
-        # string float
-        dec_count = 0
-        dec_flag = 0
-        for char in num_str:
-            if dec_flag:
-                dec_count += 1
-            if char == '.':
-                dec_flag = 1
-            if char in digits:
-                num *= 10
-                num = (num + digits[char])
-        if neg_flag:
-            return 0 - (num / (10 ** dec_count))
-        else:
-            return num / (10 ** dec_count)
+        return string_float(num_str, digits, neg_flag)
     elif hex_flag:
-        # string hex
-        for i in range(len(num_str)):
-            reverse_index = len(num_str) - i - 1
-            char = num_str[reverse_index]
-            if char == 'x' or char == 'X':
-                if neg_flag:
-                    if i < len(num_str) - 3 or num_str[1] != '0':
-                        return None
-                    return 0 - num
-                else:
-                    if i < len(num_str) - 2 or num_str[0] != '0':
-                        return None
-                    return num
-            if char not in hex_values:
-                return None
-            num += (hex_values[char] * (16 ** i))
+        return string_hex(num_str, hex_values, neg_flag)
     else:
-        # string integer
-        for char in num_str:
-            if char in digits:
-                num *= 10
-                num = (num + digits[char])
-            else:
-                if char != '-':
+        return string_integer(num_str, digits, neg_flag)
+
+
+def string_float(num_str, digits, neg_flag):
+    num = 0
+    dec_count = 0
+    dec_flag = 0
+    for char in num_str:
+        if dec_flag:
+            dec_count += 1
+        if char == '.':
+            dec_flag = 1
+        if char in digits:
+            num *= 10
+            num = (num + digits[char])
+    if neg_flag:
+        return 0 - (num / (10 ** dec_count))
+    else:
+        return num / (10 ** dec_count)
+
+
+def string_hex(num_str, hex_values, neg_flag):
+    num = 0
+    for i in range(len(num_str)):
+        reverse_index = len(num_str) - i - 1
+        char = num_str[reverse_index]
+        if char == 'x' or char == 'X':
+            if neg_flag:
+                if i < len(num_str) - 3 or num_str[1] != '0':
                     return None
-        if neg_flag:
-            return 0 - num
+                return 0 - num
+            else:
+                if i < len(num_str) - 2 or num_str[0] != '0':
+                    return None
+                return num
+        if char not in hex_values:
+            return None
+        num += (hex_values[char] * (16 ** i))
+
+
+def string_integer(num_str, digits, neg_flag):
+    num = 0
+    for char in num_str:
+        if char in digits:
+            num *= 10
+            num = (num + digits[char])
         else:
-            return num
+            if char != '-':
+                return None
+    if neg_flag:
+        return 0 - num
+    else:
+        return num
 
 
 def my_datetime(num_sec):
@@ -84,17 +95,7 @@ def my_datetime(num_sec):
     yyyy = 1970
     leap_year = 0
     while days >= 1:
-        if yyyy % 4 == 0:
-            if yyyy % 100 == 0:
-                if yyyy % 400 == 0:
-                    leap_year = 1
-                else:
-                    leap_year = 0
-            else:
-                leap_year = 1
-        else:
-            leap_year = 0
-
+        leap_year = is_leap_year(yyyy)
         if leap_year:
             if days >= 366:
                 yyyy += 1
@@ -123,6 +124,19 @@ def my_datetime(num_sec):
     return f"{mm:02}-{dd:02}-{yyyy}"
 
 
+def is_leap_year(yyyy):
+    if yyyy % 4 == 0:
+        if yyyy % 100 == 0:
+            if yyyy % 400 == 0:
+                return 1
+            else:
+                return 0
+        else:
+            return 1
+    else:
+        return 0
+
+
 def conv_endian(num, endian='big'):
     hex_values = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4',
                   5: '5', 6: '6', 7: '7', 8: '8', 9: '9',
@@ -147,26 +161,36 @@ def conv_endian(num, endian='big'):
         hex_list = hex_list[1:]
     # format hex values into a string
     if endian == 'big':
-        for j in range(len(hex_list)):
-            hex_num += hex_list[j]
-            if j % 2 == 1 and j != (len(hex_list) - 1):
-                hex_num += ' '
-        if neg_flag:
-            return '-' + hex_num
-        else:
-            return hex_num
+        return big_endian(hex_list, neg_flag)
     elif endian == 'little':
-        pair = ''
-        for k in range(len(hex_list)):
-            pair += hex_list[k]
-            if k % 2 == 1:
-                hex_num = pair + hex_num
-                pair = ''
-                if k != (len(hex_list) - 1):
-                    hex_num = ' ' + hex_num
-        if neg_flag:
-            return '-' + hex_num
-        else:
-            return hex_num
+        return little_endian(hex_list, neg_flag)
     else:
         return None
+
+
+def big_endian(hex_list, neg_flag):
+    hex_num = ''
+    for i in range(len(hex_list)):
+        hex_num += hex_list[i]
+        if i % 2 == 1 and i != (len(hex_list) - 1):
+            hex_num += ' '
+    if neg_flag:
+        return '-' + hex_num
+    else:
+        return hex_num
+
+
+def little_endian(hex_list, neg_flag):
+    hex_num = ''
+    pair = ''
+    for i in range(len(hex_list)):
+        pair += hex_list[i]
+        if i % 2 == 1:
+            hex_num = pair + hex_num
+            pair = ''
+            if i != (len(hex_list) - 1):
+                hex_num = ' ' + hex_num
+    if neg_flag:
+        return '-' + hex_num
+    else:
+        return hex_num
