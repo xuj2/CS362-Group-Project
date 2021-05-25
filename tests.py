@@ -96,6 +96,7 @@ class RandomTestCase(unittest.TestCase):
 
 
 def build_test_func(expected, test_case, func_under_test, message):
+    # Builds tests for generate_tests_conv_num
     def test(self):
         result = func_under_test(test_case)
         self.assertEqual(expected, result, message.format(test_case, expected, result))
@@ -110,7 +111,7 @@ def generate_tests_conv_num(generate=10000):
         num = random.randint(-10000000000000, 10000000000000)
         new_test = build_test_func(num, str(num), conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
-    
+
     for _ in range(generate):
         # Test conv_num for correct output of valid floats
         num = random.uniform(-10000, 10000)
@@ -123,7 +124,7 @@ def generate_tests_conv_num(generate=10000):
         hex_num = hex(num)
         new_test = build_test_func(num, str(hex_num), conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
-    
+
     for _ in range(generate):
         # Tests if conv_num returns none for random strings of numbers and letters
         # Maybe this should be changed? Possibility of getting an actual hex number exists
