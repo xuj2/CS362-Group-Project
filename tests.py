@@ -66,7 +66,8 @@ class TestCase(unittest.TestCase):
                 hex_num = '0' + hex_num
             hex_result = ' '.join(reversed([hex_num[i:i + 2]
                                   for i in range(0, len(hex_num), 2)]))
-            self.assertEqual(hex_result, conv_endian(decimal, 'little'), decimal)
+            self.assertEqual(hex_result, conv_endian(
+                decimal, 'little'), decimal)
 
     # Test conv_endian for random negative values, little endian format
     def test_conv_endian5(self):
@@ -79,7 +80,8 @@ class TestCase(unittest.TestCase):
             hex_result = ' '.join(reversed([hex_num[i:i + 2]
                                   for i in range(0, len(hex_num), 2)]))
             hex_result = '-' + hex_result
-            self.assertEqual(hex_result, conv_endian(decimal, 'little'), decimal)
+            self.assertEqual(hex_result, conv_endian(
+                decimal, 'little'), decimal)
 
     # Test conv_endian for incorrect/mistyped endian inputs
     def test_conv_endian6(self):
@@ -99,7 +101,8 @@ def build_test_func(expected, test_case, func_under_test, message):
     # Builds tests for generate_tests_conv_num
     def test(self):
         result = func_under_test(test_case)
-        self.assertEqual(expected, result, message.format(test_case, expected, result))
+        self.assertEqual(expected, result, message.format(
+            test_case, expected, result))
     return test
 
 
@@ -126,9 +129,11 @@ def generate_tests_conv_num(generate=10000):
         setattr(RandomTestCase, 'test_{}'.format(str(num)), new_test)
 
     for _ in range(generate):
-        # Tests if conv_num returns none for random strings of numbers and letters
-        # Maybe this should be changed? Possibility of getting an actual hex number exists
-        test_input = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(10, 15)))
+        # Tests if conv_num returns none for random strings
+        # of numbers and letters. Maybe this should be changed?
+        # Possibility of getting an actual hex number exists
+        test_input = ''.join(random.choices(
+            string.ascii_letters + string.digits, k=random.randint(10, 15)))
         new_test = build_test_func(None, test_input, conv_num, message)
         setattr(RandomTestCase, 'test_{}'.format(test_input), new_test)
 
